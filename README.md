@@ -1,20 +1,9 @@
-# ExConf
+## ExConf
 
-**TODO: Add description**
+ExConf is a library for handling configuration in an environment with multiple
+overlapping sources of data. ExConf is designed to make it easy to compose
+multiple sources into an ordered, hierarchical set of configuration data.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add ex_conf to your list of dependencies in `mix.exs`:
-
-        def deps do
-          [{:ex_conf, "~> 0.0.1"}]
-        end
-
-  2. Ensure ex_conf is started before your application:
-
-        def application do
-          [applications: [:ex_conf]]
-        end
-
+TODO
