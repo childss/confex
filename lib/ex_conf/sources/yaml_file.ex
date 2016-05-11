@@ -28,6 +28,7 @@ defmodule ExConf.Sources.YamlFile do
   The file will be read immediately and parsed as YAML. If the file does not
   exist, a `{:yamerl_exception, reason}` will be thrown.
   """
+  @spec new(String.t) :: t
   def new(path) do
     data = YamlElixir.read_from_file path
     %__MODULE__{path: path, data: data}

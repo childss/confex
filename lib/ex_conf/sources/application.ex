@@ -15,6 +15,12 @@ defmodule ExConf.Sources.Application do
 
   defstruct app: nil
 
+  @type t :: %__MODULE__{}
+
+  @doc """
+  Creates a new `ExConf.Sources.Application` struct from the given app name.
+  """
+  @spec new(atom) :: t
   def new(app) do
     %__MODULE__{app: app}
   end

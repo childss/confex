@@ -27,6 +27,7 @@ defmodule ExConf.Sources.Environment do
   @doc """
   Creates a new `ExConf.Sources.Environment` struct.
   """
+  @spec new :: t
   def new do
     %__MODULE__{}
   end

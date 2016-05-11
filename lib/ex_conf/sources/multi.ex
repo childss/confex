@@ -32,10 +32,12 @@ defmodule ExConf.Sources.Multi do
   defstruct sources: []
 
   @type t :: %__MODULE__{}
+  @type sourceable :: ExConf.ConfigSourceable.t
 
   @doc """
   Creates a new `ExConf.Sources.Multi` struct from the given list of sources.
   """
+  @spec new([sourceable]) :: t
   def new(sources \\ []) do
     %__MODULE__{sources: sources}
   end
