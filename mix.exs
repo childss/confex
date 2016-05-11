@@ -11,11 +11,13 @@ defmodule ExConf.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :yamerl]]
   end
 
   defp deps do
     [
+      {:yaml_elixir, "~> 1.0.0"},
+      {:yamerl, github: "yakaz/yamerl", tag: "v0.3.2-1"},
       {:mix_test_watch, "~> 0.2", only: :dev},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
