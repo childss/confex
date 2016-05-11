@@ -1,4 +1,4 @@
-defmodule ExConf.Sources.Map do
+defmodule Confex.Sources.Map do
   @moduledoc """
   Defines a source backed by a static map.
 
@@ -7,23 +7,23 @@ defmodule ExConf.Sources.Map do
 
   The data source can be initialized with a map:
 
-      iex> ExConf.Sources.Map.new(%{"key" => "value"})
-      %ExConf.Sources.Map{data: %{"key" => "value"}}
+      iex> Confex.Sources.Map.new(%{"key" => "value"})
+      %Confex.Sources.Map{data: %{"key" => "value"}}
 
   Keyword list syntax may also be used. Atom keys will be converted to strings.
 
-      iex> ExConf.Sources.Map.new(key: "value")
-      %ExConf.Sources.Map{data: %{"key" => "value"}}
+      iex> Confex.Sources.Map.new(key: "value")
+      %Confex.Sources.Map{data: %{"key" => "value"}}
 
   ## ConfigSourceable Protocol
 
-  The `ExConf.ConfigSourceable` protocol implementation for map sources does a
+  The `Confex.ConfigSourceable` protocol implementation for map sources does a
   direct key lookup via `Map.get`. Undefined keys return nil.
 
-      iex> source = ExConf.Sources.Map.new(key: "value")
-      iex> ExConf.ConfigSourceable.get(source, "key")
+      iex> source = Confex.Sources.Map.new(key: "value")
+      iex> Confex.ConfigSourceable.get(source, "key")
       "value"
-      iex> ExConf.ConfigSourceable.get(source, "other")
+      iex> Confex.ConfigSourceable.get(source, "other")
       nil
   """
 
@@ -32,7 +32,7 @@ defmodule ExConf.Sources.Map do
   @type t :: %__MODULE__{}
 
   @doc """
-  Creates a new `ExConf.Sources.Map` struct with the given data.
+  Creates a new `Confex.Sources.Map` struct with the given data.
 
   The given enumerable will be inserted into a new map, coercing keys to
   strings.
@@ -43,7 +43,7 @@ defmodule ExConf.Sources.Map do
     %__MODULE__{data: data}
   end
 
-  defimpl ExConf.ConfigSourceable do
+  defimpl Confex.ConfigSourceable do
     def get(%{data: data}, key) do
       Map.get(data, key)
     end

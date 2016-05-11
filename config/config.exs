@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :ex_conf, test_key: "test value"
+config :confex, test_key: "test value"

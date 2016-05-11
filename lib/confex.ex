@@ -1,7 +1,7 @@
-defmodule ExConf do
+defmodule Confex do
   @moduledoc File.read!("README.md")
 
-  alias ExConf.ConfigSourceable, as: Source
+  alias Confex.ConfigSourceable, as: Source
 
   @doc """
   Gets an optional string from the source.
@@ -10,12 +10,12 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "value", int: 123)
-      iex> ExConf.get_string(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "value", int: 123)
+      iex> Confex.get_string(source, "str")
       "value"
-      iex> ExConf.get_string(source, "int")
+      iex> Confex.get_string(source, "int")
       "123"
-      iex> ExConf.get_string(source, "not here")
+      iex> Confex.get_string(source, "not here")
       nil
   """
   def get_string(source, key) do
@@ -32,12 +32,12 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "value", int: 123)
-      iex> ExConf.fetch_string(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "value", int: 123)
+      iex> Confex.fetch_string(source, "str")
       {:ok, "value"}
-      iex> ExConf.fetch_string(source, "int")
+      iex> Confex.fetch_string(source, "int")
       {:ok, "123"}
-      iex> ExConf.fetch_string(source, "not here")
+      iex> Confex.fetch_string(source, "not here")
       :error
   """
   def fetch_string(source, key) do
@@ -54,12 +54,12 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "value", int: 123)
-      iex> ExConf.fetch_string!(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "value", int: 123)
+      iex> Confex.fetch_string!(source, "str")
       "value"
-      iex> ExConf.fetch_string!(source, "int")
+      iex> Confex.fetch_string!(source, "int")
       "123"
-      iex> ExConf.fetch_string!(source, "not here")
+      iex> Confex.fetch_string!(source, "not here")
       ** (RuntimeError) key "not here" not found in configuration
   """
   def fetch_string!(source, key) do
@@ -77,14 +77,14 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
-      iex> ExConf.get_int(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
+      iex> Confex.get_int(source, "str")
       123
-      iex> ExConf.get_int(source, "int")
+      iex> Confex.get_int(source, "int")
       456
-      iex> ExConf.get_int(source, "not here")
+      iex> Confex.get_int(source, "not here")
       nil
-      iex> ExConf.get_int(source, "not_int")
+      iex> Confex.get_int(source, "not_int")
       nil
   """
   def get_int(source, key) do
@@ -104,14 +104,14 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
-      iex> ExConf.fetch_int(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
+      iex> Confex.fetch_int(source, "str")
       {:ok, 123}
-      iex> ExConf.fetch_int(source, "int")
+      iex> Confex.fetch_int(source, "int")
       {:ok, 456}
-      iex> ExConf.fetch_int(source, "not here")
+      iex> Confex.fetch_int(source, "not here")
       :error
-      iex> ExConf.fetch_int(source, "not_int")
+      iex> Confex.fetch_int(source, "not_int")
       {:error, :unparseable, "garbage"}
   """
   def fetch_int(source, key) do
@@ -137,16 +137,16 @@ defmodule ExConf do
 
   ## Examples
 
-      iex> source = ExConf.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
-      iex> ExConf.fetch_int!(source, "str")
+      iex> source = Confex.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
+      iex> Confex.fetch_int!(source, "str")
       123
-      iex> ExConf.fetch_int!(source, "int")
+      iex> Confex.fetch_int!(source, "int")
       456
-      iex> ExConf.fetch_int!(source, "not here")
+      iex> Confex.fetch_int!(source, "not here")
       ** (RuntimeError) key "not here" not found in configuration
 
-      iex> source = ExConf.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
-      iex> ExConf.fetch_int!(source, "not_int")
+      iex> source = Confex.Sources.Map.new(str: "123", int: 456, not_int: "garbage")
+      iex> Confex.fetch_int!(source, "not_int")
       ** (RuntimeError) key "not_int" with value \"garbage\" is not an integer
   """
   def fetch_int!(source, key) do

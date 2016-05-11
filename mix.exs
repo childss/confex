@@ -1,17 +1,34 @@
-defmodule ExConf.Mixfile do
+defmodule Confex.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :ex_conf,
+    [app: :confex,
      version: "0.1.0",
      elixir: "~> 1.2",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
+     description: description,
+     package: package,
      deps: deps]
   end
 
   def application do
     [applications: [:logger, :yamerl]]
+  end
+
+  def description do
+    """
+    Confex is a library for handling configuration in an environment with multiple
+    overlapping sources of data. Confex is designed to make it easy to compose
+    multiple sources into an ordered, hierarchical set of configuration data.
+    """
+  end
+
+  def package do
+    [
+      files: [],
+      maintainers: ["Stuart Childs"],
+      licenses: ["MIT"],
+      links: %{ "GitHub": "https://github.com/childss/confex" }
+    ]
   end
 
   defp deps do
