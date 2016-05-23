@@ -5,6 +5,7 @@ defmodule Confex.Mixfile do
     [app: :confex,
      version: "0.1.0",
      elixir: "~> 1.2",
+     consolidate_protocols: Mix.env != :test,
      description: description,
      package: package,
      deps: deps]

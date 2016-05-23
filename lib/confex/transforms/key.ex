@@ -1,42 +1,77 @@
 defmodule Confex.Transforms.Key do
   @moduledoc """
-  Defines a transform for modifying keys for lookups.
+  A behaviour module for defining a key transformer for a pipeline.
 
-  A `Confex.Transforms.Key` can be created from either an anonymous/partial
-  function or a `{module, function}` tuple.
+  Key transformers are used by a pipeline to alter the requested key before
+  passing it on to its underlying source.
 
-  ## Confex.ConfigSourceable Protocol
+  Using this module automatically adopts the behaviour, defines a struct, and
+  derives an implementation of the `Confex.KeyTransformable` protocol. Any
+  options supplied to the `use` macro will be passed to the `defstruct` macro,
+  so they should be a list of keywords.
 
-  The `Confex.ConfigSourceable` implementation for this type calls the
-  provided function to transform the key, using the return value to call the
-  protocol implementation for the underlying source.
+  ## Examples
 
-      iex> source = Confex.Sources.Map.new(%{"KEY" => "value"})
-      iex> transform = Confex.Transforms.Key.new(&String.upcase/1, source)
-      iex> Confex.ConfigSourceable.get(transform, "key")
-      "value"
+  One use case for key transformers is to able to specify configuration keys in
+  a consistent format but retrieve them from sources that may have a different
+  scheme for naming keys. For example, say we want to lookup configuration
+  values from the environment using keys like `"example.key"` but the
+  deployment environment provides the values in variables named like
+  `EXAMPLE__KEY`. We can use a key transformer in a pipeline to achieve this:
+
+      defmodule EnvironmentKeyTransformer do
+        use Confex.Transforms.Key
+
+        def new(), do: %__MODULE__{}
+
+        def transform_key(_, key) do
+          key
+          |> String.split(".")
+          |> Enum.map(&String.upcase/1)
+          |> Enum.join("__")
+        end
+      end
+
+      env = Confex.Sources.Environment.new
+      pipeline = Confex.Pipeline.new(env, key_transforms: [EnvironmentKeyTransformer.new])
+
+      System.put_env("EXAMPLE__KEY", "value")
+      puts Confex.ConfigSourceable.get(pipeline, "example.key")
+      # will print "value"
+
+  As the `__using__` macro definition for key transformers defines a struct
+  with the given fields, we can also provide data to be used when transforming
+  keys. For example, a transformer that prefixes all requested keys with a
+  value:
+
+      defmodule PrefixKeyTransformer do
+        use Confex.Transforms.Key, prefix: ""
+
+        def new(prefix), do: %__MODULE__{prefix: prefix}
+
+        def transform_key(%{prefix: prefix}, key) do
+          "\#{prefix}_key"
+        end
+      end
+
+      source = Confex.Sources.Environment.map(%{transformed_key: "value"})
+      key = PrefixKeyTransformer.new("transformed")
+      pipeline = Confex.Pipeline.new(env, key_transforms: [key])
+
+      puts Confex.ConfigSourceable.get(pipeline, "key")
+      # will print "value"
   """
 
-  defstruct function: nil, source: nil
+  defmacro __using__(opts) do
+    quote do
+      @behaviour Confex.Transforms.Key
+      @derive Confex.KeyTransformable
 
-  @type t :: %__MODULE__{}
-  @type sourceable :: Confexig.ConfigSourceable.t
-
-  @doc """
-  Creates a new `Confex.Transforms.Key` struct.
-  """
-  @spec new((String.t -> String.t) | {module, atom}, sourceable) :: t
-  def new(fun, source) do
-    %__MODULE__{function: fun, source: source}
-  end
-
-  defimpl Confex.ConfigSourceable do
-    def get(%{function: fun, source: source}, key) when is_function(fun, 1) do
-      Confex.ConfigSourceable.get(source, fun.(key))
-    end
-    def get(%{function: {mod, fun}, source: source}, key)
-      when is_atom(mod) and is_atom(fun) do
-        Confex.ConfigSourceable.get(source, :erlang.apply(mod, fun, [key]))
+      defstruct unquote(opts)
     end
   end
+
+  @type transformer :: module
+
+  @callback transform_key(transformer, String.t) :: String.t
 end

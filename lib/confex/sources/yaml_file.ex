@@ -26,12 +26,25 @@ defmodule Confex.Sources.YamlFile do
   Creates a new `Confex.Sources.YamlFile` struct from the given file.
 
   The file will be read immediately and parsed as YAML. If the file does not
-  exist, a `{:yamerl_exception, reason}` will be thrown.
+  exist and is required (`opts` contains a keyword `:required` with value
+  `true`, the default), a `{:yamerl_exception, reason}` will be thrown. If the
+  file does not exist and is optional (`opts` contains a keyword `:required`
+  with value `false`), then the resulting struct will have an empty map in the
+  `data` field.
   """
-  @spec new(String.t) :: t
-  def new(path) do
-    data = YamlElixir.read_from_file path
-    %__MODULE__{path: path, data: data}
+  @spec new(String.t, [required: boolean]) :: t
+  def new(path, opts \\ [required: true]) do
+    if Keyword.get(opts, :required, true) do
+      data = YamlElixir.read_from_file path
+      %__MODULE__{path: path, data: data}
+    else
+      if File.exists?(path) do
+        data = YamlElixir.read_from_file path
+        %__MODULE__{path: path, data: data}
+      else
+        %__MODULE__{path: path, data: %{}}
+      end
+    end
   end
 
   defimpl Confex.ConfigSourceable do
