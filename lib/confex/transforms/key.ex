@@ -12,11 +12,11 @@ defmodule Confex.Transforms.Key do
 
   ## Examples
 
-  One use case for key transformers is to able to specify configuration keys in
-  a consistent format but retrieve them from sources that may have a different
-  scheme for naming keys. For example, say we want to lookup configuration
-  values from the environment using keys like `"example.key"` but the
-  deployment environment provides the values in variables named like
+  One use case for key transformers is to be able to specify configuration keys
+  in a consistent format but retrieve them from sources that may have a
+  different scheme for naming keys. For example, say we want to lookup
+  configuration values from the environment using keys like `"example.key"` but
+  the deployment environment provides the values in variables named like
   `EXAMPLE__KEY`. We can use a key transformer in a pipeline to achieve this:
 
       defmodule EnvironmentKeyTransformer do
@@ -54,7 +54,7 @@ defmodule Confex.Transforms.Key do
         end
       end
 
-      source = Confex.Sources.Environment.map(%{transformed_key: "value"})
+      source = Confex.Sources.Map.new(%{transformed_key: "value"})
       key = PrefixKeyTransformer.new("transformed")
       pipeline = Confex.Pipeline.new(env, key_transforms: [key])
 
